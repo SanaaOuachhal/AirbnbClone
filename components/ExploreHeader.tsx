@@ -55,7 +55,7 @@ const ExploreHeader = ({ onCategoryChanged }: Props) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onCategoryChanged(categories[index].name);
   };
-
+ 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
