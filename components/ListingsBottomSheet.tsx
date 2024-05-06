@@ -14,11 +14,11 @@ interface Props {
 const ListingsBottomSheet = ({ listings, category }: Props) => {
   const snapPoints = useMemo(() => ['10%', '100%'], []);
   const bottomSheetRef = useRef<BottomSheet>(null);
- /* const [refresh, setRefresh] = useState<number>(0);*/
+  const [refresh, setRefresh] = useState(0);
 
   const onShowMap = () => {
     bottomSheetRef.current?.collapse();
-   /* setRefresh(refresh + 1);*/
+    setRefresh(refresh + 1);
   };
 
   return (
@@ -30,8 +30,8 @@ const ListingsBottomSheet = ({ listings, category }: Props) => {
       handleIndicatorStyle={{ backgroundColor: Colors.grey }}
       style={styles.sheetContainer}>
       <View style={styles.contentContainer}>
-        <Listings listings={listings}/* refresh={refresh}*/ category={category} />
-        <View style={styles.absoluteView}>
+        <Listings listings={listings} refresh={refresh} category={category} />
+        <View style={styles.absoluteBtn}>
           <TouchableOpacity onPress={onShowMap} style={styles.btn}>
             <Text style={{ fontFamily: 'mon-sb', color: '#fff' }}>Map</Text>
             <Ionicons name="map" size={20} style={{ marginLeft: 10 }} color={'#fff'} />
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
   },
-  absoluteView: {
+  absoluteBtn: {
     position: 'absolute',
     bottom: 30,
     width: '100%',
@@ -54,15 +54,17 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: Colors.dark,
-    padding: 14,
+    padding: 16,
     height: 50,
     borderRadius: 30,
     flexDirection: 'row',
     marginHorizontal: 'auto',
     alignItems: 'center',
+    gap: 8,
   },
   sheetContainer: {
     backgroundColor: '#fff',
+    borderRadius: 10,
     elevation: 4,
     shadowColor: '#000',
     shadowOpacity: 0.3,

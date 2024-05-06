@@ -7,6 +7,7 @@ import listingsDataGeo from '@/assets/data/airbnb-listings.geo.json';
 import Listings from '@/components/Listings';
 import { Stack } from 'expo-router';
 import ExploreHeader from '@/components/ExploreHeader';
+import ListingsBottomSheet from '@/components/ListingsBottomSheet';
 
 
 
@@ -30,13 +31,14 @@ import ExploreHeader from '@/components/ExploreHeader';
 
 
   return (
-    <View style={{flex: 1, marginTop: 130}}>
+    <View style={{flex: 1, marginTop: 80}}>
       <Stack.Screen
        options={{
           header: () => <ExploreHeader onCategoryChanged={onDataChanged}/>,
       }}/>
-      /*<Listings listings={items} category={category} />*/
+      {/*<Listings listings={items} category={category} />*/ }
       <ListingsMap listings={getoItems} />
+      <ListingsBottomSheet listings={items} category={category}/>
     </View>
   )
 }

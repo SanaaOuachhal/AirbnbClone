@@ -5,20 +5,28 @@ import { Link } from 'expo-router';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import { useEffect, useRef, useState } from 'react';
 import { Listing } from '@/interfaces/listings';
+import { BottomSheetFlatList, BottomSheetFlatListMethods } from '@gorhom/bottom-sheet';
 //import { BottomSheetFlatList, BottomSheetFlatListMethods } from '@gorhom/bottom-sheet';
 
 interface Props {
     listings: any[];
     //refresh: number;
     category: string;
+    refresh: number;
   }
 
-const Listings = ({ listings : items, category}: Props) => {
+const Listings = ({ listings : items, category, refresh}: Props) => {
     const[loading, setLoading] = useState(false);
-    const listRef = useRef<FlatList>(null);
+    const listRef = useRef<BottomSheetFlatListMethods>(null);
+
+    useEffect(()=>{
+      if (refresh){
+        listRef.current?.scrollToOffset({offset:0, animated: true});
+      }
+
+    },[refresh])
 
     useEffect(() =>{
-        console.log('RELOAD LISTINGS: ',items.length)
         setLoading(true);
 
         setTimeout(()=>{
@@ -55,7 +63,10 @@ const Listings = ({ listings : items, category}: Props) => {
 
   return (
     <View style={defaultStyles.container}>
-      <FlatList renderItem={renderRow} ref={listRef} data={loading ? [] : items} />
+      <BottomSheetFlatList renderItem={renderRow} 
+      ref={listRef} 
+      data={loading ? [] : items} 
+      ListHeaderComponent={<Text style={styles.info}>{items.length} Homes</Text>}/>
     </View>
   );
 };
