@@ -1,156 +1,93 @@
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import React, { memo, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ListRenderItem, TouchableOpacity, Image, FlatList } from 'react-native';
 import { defaultStyles } from '@/constants/Styles';
-import { Marker } from 'react-native-maps';
-import MapView from 'react-native-map-clustering';
-import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import Colors from '@/constants/Colors';
-import * as Location from 'expo-location';
+import { Link } from 'expo-router';
+import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
+import { useEffect, useRef, useState } from 'react';
+import { Listing } from '@/interfaces/listings';
+import { BottomSheetFlatList, BottomSheetFlatListMethods } from '@gorhom/bottom-sheet';
+//import { BottomSheetFlatList, BottomSheetFlatListMethods } from '@gorhom/bottom-sheet';
 
 interface Props {
-  listings: any;
-}
+    listings: any[];
+    //refresh: number;
+    category: string;
+    refresh: number;
+  }
 
-const INITIAL_REGION = {
-  latitude: 37.33,
-  longitude: -122,
-  latitudeDelta: 9,
-  longitudeDelta: 9,
-};
+const Listings = ({ listings : items, category, refresh}: Props) => {
+    const[loading, setLoading] = useState(false);
+    const listRef = useRef<BottomSheetFlatListMethods>(null);
 
-const ListingsMap = memo(({ listings }: Props) => {
-  const router = useRouter();
-  const mapRef = useRef<any>(null);
+    useEffect(()=>{
+      if (refresh){
+        listRef.current?.scrollToOffset({offset:0, animated: true});
+      }
 
-  // When the component mounts, locate the user
-  useEffect(() => {
-    onLocateMe();
-  }, []);
+    },[refresh])
 
-  // When a marker is selected, navigate to the listing page
-  const onMarkerSelected = (event: any) => {
-    router.push(`/listing/${event.properties.id}`);
-  };
+    useEffect(() =>{
+        setLoading(true);
 
-  // Focus the map on the user's location
-  const onLocateMe = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      return;
-    }
+        setTimeout(()=>{
+          setLoading(false);
+        },200);
+    }, [category]);
 
-    let location = await Location.getCurrentPositionAsync({});
+    const renderRow: ListRenderItem<Listing> = ({ item }) => (
+      <Link href={`/listing/${item.id}`} asChild>
+        <TouchableOpacity>
+          <Animated.View style={styles.listing} entering={FadeInRight} exiting={FadeOutLeft}>
+            <Image source={{uri: item.medium_url}} style={styles.image}/>
+            <TouchableOpacity style={{position: 'absolute' , right:30 , top: 30}}>
+              <Ionicons name="heart-outline" size={24} color={'#000'}/>
+            </TouchableOpacity>
 
-    const region = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: 7,
-      longitudeDelta: 7,
-    };
+            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+              <Text style={{fontSize:16, fontFamily:'mon-sb'}}>{item.name}</Text>
+              <View style={{flexDirection:'row', gap:4}}>
+                <Ionicons name='star' size={16}/>
+                <Text style={{fontFamily:'mon-sb'}}>{item.review_scores_rating / 20}</Text>
+              </View>
+            </View>
+            <Text style={{fontFamily:'mon-sb'}}>{item.room_type}</Text>
 
-    mapRef.current?.animateToRegion(region);
-  };
-
-  // Overwrite the renderCluster function to customize the cluster markers
-  const renderCluster = (cluster: any) => {
-    const { id, geometry, onPress, properties } = cluster;
-
-    const points = properties.point_count;
-    return (
-      <Marker
-        key={`cluster-${id}`}
-        coordinate={{
-          longitude: geometry.coordinates[0],
-          latitude: geometry.coordinates[1],
-        }}
-        onPress={onPress}>
-        <View style={styles.marker}>
-          <Text
-            style={{
-              color: '#000',
-              textAlign: 'center',
-              fontFamily: 'mon-sb',
-            }}>
-            {points}
-          </Text>
-        </View>
-      </Marker>
+            <View style={{flexDirection:'row', gap:4}}>
+            <Text style={{fontFamily:'mon-sb'}}>MAD {item.price}</Text>
+            <Text style={{fontFamily:'mon'}}>night</Text>
+            </View>
+          </Animated.View>
+        </TouchableOpacity>
+      </Link>
     );
-  };
 
   return (
     <View style={defaultStyles.container}>
-      <MapView
-        ref={mapRef}
-        animationEnabled={false}
-        style={StyleSheet.absoluteFillObject}
-        initialRegion={INITIAL_REGION}
-        clusterColor="#fff"
-        clusterTextColor="#000"
-        clusterFontFamily="mon-sb"
-        renderCluster={renderCluster}>
-        {/* Render all our marker as usual */}
-        {listings.features.map((item: any) => (
-          <Marker
-            coordinate={{
-              latitude: item.properties.latitude,
-              longitude: item.properties.longitude,
-            }}
-            key={item.properties.id}
-            onPress={() => onMarkerSelected(item)}>
-            <View style={styles.marker}>
-              <Text style={styles.markerText}>€ {item.properties.price}</Text>
-            </View>
-          </Marker>
-        ))}
-      </MapView>
-      <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
-        <Ionicons name="navigate" size={24} color={Colors.dark} />
-      </TouchableOpacity>
+      <BottomSheetFlatList renderItem={renderRow} 
+      ref={listRef} 
+      data={loading ? [] : items} 
+      ListHeaderComponent={<Text style={styles.info}>{items.length} Homes</Text>}/>
     </View>
   );
-});
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  listing:{
+    padding:16,
+    gap: 10,
+    marginVertical: 16,
   },
-  marker: {
-    padding: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-    elevation: 5,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    shadowOffset: {
-      width: 1,
-      height: 10,
-    },
-  },
-  markerText: {
-    fontSize: 14,
-    fontFamily: 'mon-sb',
-  },
-  locateBtn: {
-    position: 'absolute',
-    top: 70,
-    right: 20,
-    backgroundColor: '#fff',
-    padding: 10,
+  image: {
+    width: '100%',
+    height: 300,
     borderRadius: 10,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    shadowOffset: {
-      width: 1,
-      height: 10,
-    },
   },
-});
+  info: {
+    textAlign: 'center',
+    fontFamily: 'mon-sb',
+    fontSize: 16,
+    marginTop: 4,
+  },
+})
 
-export default ListingsMap;
+export default Listings;
