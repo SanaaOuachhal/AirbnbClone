@@ -29,8 +29,8 @@ const ListingsMap = memo(({ listings }: Props) => {
   }, []);
 
   // When a marker is selected, navigate to the listing page
-  const onMarkerSelected = (event: any) => {
-    router.push(`/listing/${event.properties.id}`);
+  const onMarkerSelected = (id: string) => {
+    router.push(`/listing/${id}`);
   };
 
   // Focus the map on the user's location
@@ -52,33 +52,6 @@ const ListingsMap = memo(({ listings }: Props) => {
     mapRef.current?.animateToRegion(region);
   };
 
-  // Overwrite the renderCluster function to customize the cluster markers
-  const renderCluster = (cluster: any) => {
-    const { id, geometry, onPress, properties } = cluster;
-
-    const points = properties.point_count;
-    return (
-      <Marker
-        key={`cluster-${id}`}
-        coordinate={{
-          longitude: geometry.coordinates[0],
-          latitude: geometry.coordinates[1],
-        }}
-        onPress={onPress}>
-        <View style={styles.marker}>
-          <Text
-            style={{
-              color: '#000',
-              textAlign: 'center',
-              fontFamily: 'mon-sb',
-            }}>
-            {points}
-          </Text>
-        </View>
-      </Marker>
-    );
-  };
-
   return (
     <View style={defaultStyles.container}>
       <MapView
@@ -89,18 +62,19 @@ const ListingsMap = memo(({ listings }: Props) => {
         clusterColor="#fff"
         clusterTextColor="#000"
         clusterFontFamily="mon-sb"
-        renderCluster={renderCluster}>
-        {/* Render all our marker as usual */}
-        {listings.features.map((item: any) => (
+      >
+        {/* Render all our markers */}
+        {listings.features.map((feature: any) => (
           <Marker
+            key={feature.properties.id}
             coordinate={{
-              latitude: item.properties.latitude,
-              longitude: item.properties.longitude,
+              latitude: feature.geometry.coordinates[1],
+              longitude: feature.geometry.coordinates[0],
             }}
-            key={item.properties.id}
-            onPress={() => onMarkerSelected(item)}>
+            onPress={() => onMarkerSelected(feature.properties.id)}
+          >
             <View style={styles.marker}>
-              <Text style={styles.markerText}>€ {item.properties.price}</Text>
+              <Text style={styles.markerText}>MAD {feature.properties.price * 10}</Text>
             </View>
           </Marker>
         ))}

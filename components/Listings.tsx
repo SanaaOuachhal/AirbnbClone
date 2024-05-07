@@ -1,3 +1,4 @@
+
 import { View, Text, StyleSheet, ListRenderItem, TouchableOpacity, Image, FlatList } from 'react-native';
 import { defaultStyles } from '@/constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
@@ -53,7 +54,7 @@ const Listings = ({ listings : items, category, refresh}: Props) => {
             <Text style={{fontFamily:'mon-sb'}}>{item.room_type}</Text>
 
             <View style={{flexDirection:'row', gap:4}}>
-            <Text style={{fontFamily:'mon-sb'}}>MAD {item.price}</Text>
+            <Text style={{fontFamily:'mon-sb'}}>MAD {item.price * 10}</Text>
             <Text style={{fontFamily:'mon'}}>night</Text>
             </View>
           </Animated.View>
@@ -91,4 +92,3 @@ const styles = StyleSheet.create({
 })
 
 export default Listings;
-

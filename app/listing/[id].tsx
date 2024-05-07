@@ -132,7 +132,7 @@ const DetailsPage = () => {
         <View
           style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <TouchableOpacity style={styles.footerText}>
-            <Text style={styles.footerPrice}>€{listing.price}</Text>
+            <Text style={styles.footerPrice}>MAD {listing.price * 10}</Text>
             <Text>night</Text>
           </TouchableOpacity>
 
