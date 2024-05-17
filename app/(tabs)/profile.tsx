@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  StatusBar,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useAuth, useUser } from '@clerk/clerk-expo';
@@ -68,7 +69,7 @@ const Page = () => {
   };
 
   return (
-    <SafeAreaView style={defaultStyles.container}>
+    <><StatusBar translucent={false} backgroundColor="transparent" /><SafeAreaView style={defaultStyles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Profile</Text>
         <Ionicons name="notifications-outline" size={26} />
@@ -96,14 +97,12 @@ const Page = () => {
                   placeholder="First Name"
                   value={firstName || ''}
                   onChangeText={setFirstName}
-                  style={[defaultStyles.inputField, { width: 100 }]}
-                />
+                  style={[defaultStyles.inputField, { width: 100 }]} />
                 <TextInput
                   placeholder="Last Name"
                   value={lastName || ''}
                   onChangeText={setLastName}
-                  style={[defaultStyles.inputField, { width: 100 }]}
-                />
+                  style={[defaultStyles.inputField, { width: 100 }]} />
                 <TouchableOpacity onPress={onSaveUser}>
                   <Ionicons name="checkmark-outline" size={24} color={Colors.dark} />
                 </TouchableOpacity>
@@ -121,7 +120,7 @@ const Page = () => {
           <Button title="Log In" color={Colors.dark} />
         </Link>
       )}
-    </SafeAreaView>
+    </SafeAreaView></>
   );
 };
 

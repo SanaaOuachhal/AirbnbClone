@@ -1,8 +1,16 @@
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  StatusBar,
+  Platform,
+} from 'react-native';
 import Colors from '@/constants/Colors';
-import { Ionicons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
 
@@ -55,9 +63,10 @@ const ExploreHeader = ({ onCategoryChanged }: Props) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onCategoryChanged(categories[index].name);
   };
- 
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <View style={styles.container}>
         <View style={styles.actionRow}>
           <Link href={'/(modals)/booking'} asChild>
@@ -65,8 +74,8 @@ const ExploreHeader = ({ onCategoryChanged }: Props) => {
               <View style={styles.searchBtn}>
                 <Ionicons name="search" size={24} />
                 <View>
-                  <Text style={{ fontFamily: 'mon-sb' }}>Where to?</Text>
-                  <Text style={{ color: Colors.grey, fontFamily: 'mon' }}>Anywhere · Any week</Text>
+                  <Text style={styles.searchText}>Where to?</Text>
+                  <Text style={styles.searchSubText}>Anywhere · Any week</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -80,11 +89,7 @@ const ExploreHeader = ({ onCategoryChanged }: Props) => {
           horizontal
           ref={scrollRef}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            alignItems: 'center',
-            gap: 20,
-            paddingHorizontal: 16,
-          }}>
+          contentContainerStyle={styles.scrollViewContent}>
           {categories.map((item, index) => (
             <TouchableOpacity
               ref={(el) => (itemsRef.current[index] = el)}
@@ -108,6 +113,11 @@ const ExploreHeader = ({ onCategoryChanged }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
   container: {
     backgroundColor: '#fff',
     height: 130,
@@ -127,7 +137,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 16,
   },
-
   searchBtn: {
     backgroundColor: '#fff',
     flexDirection: 'row',
@@ -146,6 +155,13 @@ const styles = StyleSheet.create({
       width: 1,
       height: 1,
     },
+  },
+  searchText: {
+    fontFamily: 'mon-sb',
+  },
+  searchSubText: {
+    color: Colors.grey,
+    fontFamily: 'mon',
   },
   filterBtn: {
     padding: 10,
@@ -176,6 +192,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#000',
     borderBottomWidth: 2,
     paddingBottom: 8,
+  },
+  scrollViewContent: {
+    alignItems: 'center',
+    gap: 20,
+    paddingHorizontal: 16,
   },
 });
 
