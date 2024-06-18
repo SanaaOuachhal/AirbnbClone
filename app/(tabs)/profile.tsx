@@ -114,10 +114,10 @@ const Page = () => {
         </View>
       )}
 
-      {isSignedIn && <Button title="Log Out" onPress={() => signOut()} color={Colors.dark} />}
+      {isSignedIn && <Button title="Log Out" onPress={() => signOut()} color={Colors.primary} />}
       {!isSignedIn && (
         <Link href={'/(modals)/login'} asChild>
-          <Button title="Log In" color={Colors.dark} />
+          <Button title="Log In" color={Colors.primary} />
         </Link>
       )}
     </SafeAreaView></>

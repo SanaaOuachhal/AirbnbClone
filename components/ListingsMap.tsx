@@ -13,11 +13,12 @@ interface Props {
 }
 
 const INITIAL_REGION = {
-  latitude: 37.33,
-  longitude: -122,
+  latitude: 31.7917, // Central latitude for Morocco
+  longitude: -7.0926, // Central longitude for Morocco
   latitudeDelta: 9,
   longitudeDelta: 9,
 };
+
 
 const ListingsMap = memo(({ listings }: Props) => {
   const router = useRouter();
