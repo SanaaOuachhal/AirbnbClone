@@ -25,6 +25,7 @@ const Page = () => {
   const { startOAuthFlow: facebookAuth } = useOAuth({ strategy: 'oauth_facebook' });
 
   const onSelectAuth = async (strategy: Strategy) => {
+    googleAuth()
     const selectedAuth = {
       [Strategy.Google]: googleAuth,
       [Strategy.Apple]: appleAuth,
@@ -33,9 +34,13 @@ const Page = () => {
 
     try {
       const { createdSessionId, setActive } = await selectedAuth();
+      console.log('DBG#1',createdSessionId);
       if (createdSessionId) {
-        setActive!({ session: createdSessionId });
+       console.log('DBG#2');
+        setActive({ session: createdSessionId });
+        console.log('DBG#3');
         router.back();
+        console.log('DBG#4');
       }
     } catch (err) {
       console.error('OAuth error', err);

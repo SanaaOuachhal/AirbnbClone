@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/listing/tinyhomes"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "listing/tiny_homes.json",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

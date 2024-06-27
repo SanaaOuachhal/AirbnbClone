@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect,useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Share } from 'react-native';
-import listingsData from '@/assets/data/airbnb-listings.json';
+import Toast from 'react-native-simple-toast';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import Animated, {
@@ -12,13 +12,17 @@ import Animated, {
   useScrollViewOffset,
 } from 'react-native-reanimated';
 import { defaultStyles } from '@/constants/Styles';
+import { Listing } from '@/interfaces/listings';
+import listingService from '../services/listing.service';
+import localStorageService from '../services/localStorage.service';
 
 const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
 
 const DetailsPage = () => {
   const { id } = useLocalSearchParams();
-  const listing = (listingsData as any[]).find((item) => item.id === id);
+  const [listing,setListing] = useState<any>({});
+  const [booked,isBooked] = useState<boolean>(false);
   const navigation = useNavigation();
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
 
@@ -33,7 +37,43 @@ const DetailsPage = () => {
     }
   };
 
+  const bookTrip = ()=> {
+    localStorageService.getData('trips').then((itemsData: any) => {
+      if(!itemsData){
+        localStorageService.storeData('trips',JSON.stringify([listing]));
+      }else {
+        const parsedItems: Listing[] = JSON.parse(itemsData);
+        parsedItems.push(listing);
+        localStorageService.storeData('trips',JSON.stringify(parsedItems));
+      }
+      Toast.show('La réservation a était bien effectuée !!', Toast.SHORT);
+
+      console.log("navigating to trips Tab");
+      //@ts-ignore
+      navigation.navigate("trips")
+    })
+  }
+
+  useEffect(()=> {
+      if(listing){
+        localStorageService.getData('trips').then((itemsData: any) => {
+        const listings: Listing[] = JSON.parse(itemsData);
+        const bookedItem = listings.find((item: Listing) => item.id == listing.id)
+        isBooked(bookedItem  != undefined)
+    })
+   }
+  },[listing])
+  
   useLayoutEffect(() => {
+
+
+    listingService.getById(id as string).then(listing => {
+       console.log(`fetching listing #${id}`)
+        setListing(listing);
+    },err => {
+      console.error(`Listing #${id} fetch error`)
+    });
+    
     navigation.setOptions({
       headerTitle: '',
       headerTransparent: true,
@@ -136,9 +176,9 @@ const DetailsPage = () => {
             <Text>night</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[defaultStyles.btn, { paddingRight: 20, paddingLeft: 20 }]}>
+          {!booked && <TouchableOpacity onPress={bookTrip}  style={[defaultStyles.btn, { paddingRight: 20, paddingLeft: 20 }]}>
             <Text style={defaultStyles.btnText}>Reserve</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       </Animated.View>
     </View>

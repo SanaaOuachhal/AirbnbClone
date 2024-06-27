@@ -28,21 +28,13 @@ const categories = [
     icon: 'local-fire-department',
   },
   {
-    name: 'Play',
+    name: 'Villas',
     icon: 'videogame-asset',
   },
   {
-    name: 'City',
+    name: 'Riyads',
     icon: 'apartment',
-  },
-  {
-    name: 'Beachfront',
-    icon: 'beach-access',
-  },
-  {
-    name: 'Countryside',
-    icon: 'nature-people',
-  },
+  }
 ];
 
 interface Props {

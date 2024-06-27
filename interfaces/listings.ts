@@ -1,6 +1,4 @@
 export interface Listing {
-
-    
   id: string
   listing_url: string
   scrape_id: string

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "AirbnbClone",
-    "slug": "AirbnbClone",
+    "slug": "airbnbclone",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.sanaaoua.airbnbclone"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,15 @@
     "experiments": {
       "typedRoutes": true,
       "tsconfigPaths": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "840c9e93-3ac5-4473-bfab-f982d11c60be"
+      }
+    },
+    "owner": "sanaaoua"
   }
 }

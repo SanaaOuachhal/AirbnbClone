@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/listing/villas"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "listing/villas.json",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

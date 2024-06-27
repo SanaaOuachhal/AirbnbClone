@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/listing/trending"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "listing/trending.json",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

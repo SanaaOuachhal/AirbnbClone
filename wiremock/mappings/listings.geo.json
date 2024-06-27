@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/listing/geo"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "listing/all.geo.json",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

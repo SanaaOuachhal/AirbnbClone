@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/listing/cabins"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "listing/cabins.json",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

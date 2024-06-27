@@ -1,0 +1,14 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/api/listing/details(.*)"
+    },
+    "response": {
+        "status": 200,
+        "bodyFileName": "listing/details/{{request.pathSegments.[3]}}.json",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "transformers": ["response-template"]
+    }
+}
